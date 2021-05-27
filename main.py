@@ -69,7 +69,7 @@ def hello():
       response += '--> ERROR: ' + str(e) + ' <br/> \n'
   response += "<br/> \n"
 
-  response += "QUERY DB TABLES <br/> \n"
+  response += "LIST DB TABLES <br/> \n"
   response += "------------------ <br/> \n"
   try:
     tables = db.engine.table_names()
