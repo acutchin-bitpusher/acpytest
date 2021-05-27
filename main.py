@@ -1,62 +1,82 @@
-from flask import Flask
 from os import environ
+import sys
 import json
-#from flask_sqlalchemy import SQLAlchemy
-#from flask.ext.sqlalchemy import SQLAlchemy
-#import sqlalchemy
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import text
+import pymysql
 
 app = Flask(__name__)
 
-#DB_VARS = [
-#  "ENGINE",
-#  "HOSTNAME",
-#  "PORT",
-#  "NAME",
-##  "CREDENTIALS",
-#  "USERNAME",
-#  "PASSWORD",
-#]
-#
-#DB_CONFIG = {}
-#for DB_VAR in DB_VARS:
-#  DB_CONFIG[DB_VAR] = environ.get( ( "DB_" + DB_VAR ), "##ENV_VAR_ABSENT##" )
-#DB_CONFIG["DB_PASSWORD"] = DB_CONFIG["DB_PASSWORD"][1:-1]
-#DB_CONFIG["DB_USERNAME"] = DB_CONFIG["DB_USERNAME"][1:-1]
-
-DB_CONFIG = {}
-DB_CONFIG["ENGINE"]   = environ.get("DB_ENGINE")
-DB_CONFIG["HOSTNAME"] = environ.get("DB_HOSTNAME")
-DB_CONFIG["PORT"]     = environ.get("DB_PORT")
-DB_CONFIG["NAME"]     = environ.get("DB_NAME")
-DB_CONFIG["USERNAME"] = environ.get("DB_USERNAME")[1:-1]
-DB_CONFIG["PASSWORD"] = environ.get("DB_PASSWORD")[1:-1]
-DB_URI = DB_CONFIG["ENGINE"] + '://' + DB_CONFIG["USERNAME"] + ':' + DB_CONFIG["PASSWORD"] + '@' + DB_CONFIG["HOSTNAME"] + ':' + DB_CONFIG["PORT"] + '/' + DB_CONFIG["NAME"]
-
-#db_username = json.loads(environ["DB_CREDENTIALS"])["username"]
-#db_password = json.loads(environ["DB_CREDENTIALS"])["password"]
-#db_hostname = json.loads(environ["DB_HOSTNAME"])
-#db_port     = json.loads(environ["DB_PORT"])
-#db_name     = json.loads(environ["DB_NAME"])
-
-#application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://{master username}:{db password}@{endpoint}/{db instance name}'
-#application.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
-#db = salalchemy(app)
-
 @app.route("/")
 def hello():
+
   #response.content_type = "text/plain"
+
   response = ""
-  response += "Hello from actest! <br/> "
+
+  response += "Hello from acpytest! <br/>"
   response += "<br/>"
-  response += "DB_CONFIG: <br/>"
+
+  response += "ENVIRONMENT <br/>"
+  response += "----------- <br/>"
+  for k, v in sorted(environ.items()):
+    response += ( str(k) + ': ' + str(v) + " <br/>" )
+  response += "<br/>"
+
+  DB_CONFIG = {}
+  DB_CONFIG["ENGINE"]   = environ.get("DB_ENGINE")
+  DB_CONFIG["HOSTNAME"] = environ.get("DB_HOSTNAME")
+  DB_CONFIG["PORT"]     = environ.get("DB_PORT")
+  DB_CONFIG["NAME"]     = environ.get("DB_NAME")
+  DB_CONFIG["USERNAME"] = environ.get("DB_USERNAME")[1:-1]
+  DB_CONFIG["PASSWORD"] = environ.get("DB_PASSWORD")[1:-1]
+
+  if DB_CONFIG["ENGINE"] == "mysql":
+    DB_CONFIG["PROTOCOL"] = "mysql+pymysql"
+  elif DB_CONFIG["ENGINE"] == "postgresql":
+    DB_CONFIG["PROTOCOL"] = "???"
+  else:
+    DB_CONFIG["PROTOCOL"] = "???"
+
+  DB_CONFIG["URI"] = DB_CONFIG["PROTOCOL"] + '://' + DB_CONFIG["USERNAME"] + ':' + DB_CONFIG["PASSWORD"] + '@' + DB_CONFIG["HOSTNAME"] + ':' + DB_CONFIG["PORT"] + '/' + DB_CONFIG["NAME"]
+
+  response += "DB_CONFIG <br/>"
+  response += "--------- <br/>"
   for DB_VAR in DB_CONFIG.keys():
     response += DB_VAR + ": " + DB_CONFIG[DB_VAR] + " <br/>"
   response += "<br/>"
-  response += "DB URI: " + DB_URI + " <br/>"
+
+  response += "SQLALCHEMY CONFIG AND DB OBJECT CREATION <br/>"
+  response += "---------------------------------------- <br/>"
+  app.config['SQLALCHEMY_DATABASE_URI']        = DB_CONFIG["URI"]
+  app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = 'False'
+  try:
+    db = SQLAlchemy(app)
+    response += 'SUCCEEDED <br/>'
+  except Exception as e:
+      response += '--> ERROR: ' + str(e) + ' <br/>'
   response += "<br/>"
-  response += "ENVIRONMENT: <br/>"
-  for k, v in sorted(environ.items()):
-    response += ( str(k) + ': ' + str(v) + " <br/>" )
+
+  response += "TEST DB CONNECTION <br/>"
+  response += "------------------ <br/>"
+  try:
+      db.engine.execute(text("SELECT 1"))
+      response += '--> SUCCESS! <br/>'
+  except Exception as e:
+      response += '--> ERROR: ' + str(e) + ' <br/>'
+  response += "<br/>"
+
+#  response += "TEST DB TABLES <br/>"
+#  response += "------------------ <br/>"
+#  try:
+#    tables = db.engine.table_names()
+#  except: 
+#    tables = "FAILED TO QUERY TABLES"
+#  response += "DB TABLES:"
+#  response += str(tables)
+#  response += "<br/>"
+
   return response
 
 if __name__ == "__main__":
