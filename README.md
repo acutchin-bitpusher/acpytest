@@ -8,6 +8,10 @@ Python/Flask app for testing infrastructure
 
 ## LOCAL DEV WITH PYTHON-VIRTUALENV
 
+1. install prerequisites
+
+    brew install python3 pyenv
+
 1. create virtualenv
 
     virtualenv venv
