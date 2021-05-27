@@ -33,13 +33,13 @@ def hello():
   DB_CONFIG["PASSWORD"] = environ.get("DB_PASSWORD")[1:-1]
 
   if DB_CONFIG["ENGINE"] == "mysql":
-    DB_CONFIG["PROTOCOL"] = "mysql+pymysql"
+    DB_CONFIG["DIALECT_DRIVER"] = "mysql+pymysql"
   elif DB_CONFIG["ENGINE"] == "postgresql":
-    DB_CONFIG["PROTOCOL"] = "???"
+    DB_CONFIG["DIALECT_DRIVER"] = "???"
   else:
-    DB_CONFIG["PROTOCOL"] = "???"
+    DB_CONFIG["DIALECT_DRIVER"] = "???"
 
-  DB_CONFIG["URI"] = DB_CONFIG["PROTOCOL"] + '://' + DB_CONFIG["USERNAME"] + ':' + DB_CONFIG["PASSWORD"] + '@' + DB_CONFIG["HOSTNAME"] + ':' + DB_CONFIG["PORT"] + '/' + DB_CONFIG["NAME"]
+  DB_CONFIG["URI"] = DB_CONFIG["DIALECT_DRIVER"] + '://' + DB_CONFIG["USERNAME"] + ':' + DB_CONFIG["PASSWORD"] + '@' + DB_CONFIG["HOSTNAME"] + ':' + DB_CONFIG["PORT"] + '/' + DB_CONFIG["NAME"]
 
   response += "DB_CONFIG <br/>"
   response += "--------- <br/>"
@@ -51,6 +51,8 @@ def hello():
   response += "---------------------------------------- <br/>"
   app.config['SQLALCHEMY_DATABASE_URI']        = DB_CONFIG["URI"]
   app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = 'False'
+  ##  DON'T DO THIS - CAUSES db.engine.execute ERROR: 'True'
+  #app.config['SQLALCHEMY_ECHO'] = 'True'
   try:
     db = SQLAlchemy(app)
     response += 'SUCCEEDED <br/>'
@@ -67,14 +69,14 @@ def hello():
       response += '--> ERROR: ' + str(e) + ' <br/>'
   response += "<br/>"
 
-#  response += "TEST DB TABLES <br/>"
+#  response += "QUERY DB TABLES <br/>"
 #  response += "------------------ <br/>"
 #  try:
 #    tables = db.engine.table_names()
-#  except: 
-#    tables = "FAILED TO QUERY TABLES"
-#  response += "DB TABLES:"
-#  response += str(tables)
+#    response += "SUCCESS! DB TABLES:"
+#    response += str(tables)
+#  except Exception as e:
+#    tables = "FAILED" + str(e) + ' <br/>'
 #  response += "<br/>"
 
   return response
