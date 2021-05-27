@@ -25,12 +25,12 @@ def hello():
   response += "<br/> \n"
 
   DB_CONFIG = {}
-  DB_CONFIG["ENGINE"]   = environ.get("DB_ENGINE")
-  DB_CONFIG["HOSTNAME"] = environ.get("DB_HOSTNAME")
-  DB_CONFIG["PORT"]     = environ.get("DB_PORT")
-  DB_CONFIG["NAME"]     = environ.get("DB_NAME")
-  DB_CONFIG["USERNAME"] = environ.get("DB_USERNAME")[1:-1]
-  DB_CONFIG["PASSWORD"] = environ.get("DB_PASSWORD")[1:-1]
+  DB_CONFIG["ENGINE"]   = environ.get("DB_ENGINE", "")
+  DB_CONFIG["HOSTNAME"] = environ.get("DB_HOSTNAME", "")
+  DB_CONFIG["PORT"]     = environ.get("DB_PORT", "")
+  DB_CONFIG["NAME"]     = environ.get("DB_NAME", "")
+  DB_CONFIG["USERNAME"] = environ.get("DB_USERNAME", "")[1:-1]
+  DB_CONFIG["PASSWORD"] = environ.get("DB_PASSWORD", "")[1:-1]
 
   if DB_CONFIG["ENGINE"] == "mysql":
     DB_CONFIG["DIALECT_DRIVER"] = "mysql+pymysql"
@@ -55,7 +55,7 @@ def hello():
   #app.config['SQLALCHEMY_ECHO'] = 'True'
   try:
     db = SQLAlchemy(app)
-    response += 'SUCCEEDED <br/> \n'
+    response += '--> SUCCESS! <br/> \n'
   except Exception as e:
       response += '--> ERROR: ' + str(e) + ' <br/> \n'
   response += "<br/> \n"

@@ -2,7 +2,7 @@
 
 Python/Flask app for testing infrastructure
 
-* Displays environment
+* Displays environment variables
 
 * Connects to DB instance
 
@@ -31,4 +31,11 @@ Python/Flask app for testing infrastructure
 1. run app
 
     python3 ./main.py
+
+
+##  DOCKER
+
+* build Docker image and push to DockerHub
+
+    docker build -f Dockerfile -t acutchinbitpusher/actest . && docker push acutchinbitpusher/actest
 
