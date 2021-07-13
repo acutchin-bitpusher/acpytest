@@ -6,11 +6,13 @@ Python/Flask app for testing infrastructure
 
 * Connects to DB instance
 
+* Stress functions based on: https://github.com/mattixtech/stress
+
 ## LOCAL DEV WITH PYTHON-VIRTUALENV
 
 1. install prerequisites
 
-    brew install python3 pyenv
+    brew install python3 pyenv pyenv-virtualenv virtualenv
 
 1. create virtualenv
 
@@ -39,3 +41,6 @@ Python/Flask app for testing infrastructure
 
     docker build -f Dockerfile -t acutchinbitpusher/actest . && docker push acutchinbitpusher/actest
 
+* build Docker image and push to DockerHub with version tag
+
+    TAG=`cat version.py | cut -f2 -d= | tr -d \'`; docker build -f Dockerfile -t acutchinbitpusher/actest:$TAG . && docker push acutchinbitpusher/actest:$TAG

@@ -6,11 +6,14 @@ from flask import Flask, request
 ##  LOCAL LIBRARIES
 from env_vars import *
 from db_config import *
+from uri_request import *
+from sql import *
+from version import *
 
 ##  FOR SQL DB TESTING
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import text
-import pymysql
+#from flask_sqlalchemy import SQLAlchemy
+#from sqlalchemy.sql import text
+#import pymysql
 
 ##  FOR STRESS
 #import argparse
@@ -28,31 +31,9 @@ def hello():
   #response.content_type = "text/plain"
   response = ""
   response += "Hello from acpytest! <br/> \n"
+  response += "version: " + version + " <br/> \n"
   response += "<br/> \n"
   response += db_config_html(environ)
-
-#  DB_CONFIG = {}
-#  DB_CONFIG["ENGINE"]   = environ.get("DB_ENGINE", "")
-#  DB_CONFIG["HOSTNAME"] = environ.get("DB_HOSTNAME", "")
-#  DB_CONFIG["PORT"]     = environ.get("DB_PORT", "")
-#  DB_CONFIG["NAME"]     = environ.get("DB_NAME", "")
-#  DB_CONFIG["USERNAME"] = environ.get("DB_USERNAME", "")[1:-1]
-#  DB_CONFIG["PASSWORD"] = environ.get("DB_PASSWORD", "")[1:-1]
-#
-#  if DB_CONFIG["ENGINE"] == "mysql":
-#    DB_CONFIG["DIALECT_DRIVER"] = "mysql+pymysql"
-#  elif DB_CONFIG["ENGINE"] == "postgresql":
-#    DB_CONFIG["DIALECT_DRIVER"] = "???"
-#  else:
-#    DB_CONFIG["DIALECT_DRIVER"] = "???"
-#
-#  DB_CONFIG["URI"] = DB_CONFIG["DIALECT_DRIVER"] + '://' + DB_CONFIG["USERNAME"] + ':' + DB_CONFIG["PASSWORD"] + '@' + DB_CONFIG["HOSTNAME"] + ':' + DB_CONFIG["PORT"] + '/' + DB_CONFIG["NAME"]
-#
-#  response += "DB_CONFIG <br/> \n"
-#  response += "--------- <br/> \n"
-#  for DB_VAR in DB_CONFIG.keys():
-#    response += DB_VAR + ": " + DB_CONFIG[DB_VAR] + " <br/> \n"
-#  response += "<br/> \n"
 
 #  response += "SQLALCHEMY CONFIG AND DB OBJECT CREATION <br/> \n"
 #  response += "---------------------------------------- <br/> \n"
@@ -86,6 +67,7 @@ def hello():
 #    tables = "FAILED" + str(e) + ' <br/> \n'
 #  response += "<br/> \n"
 
+  response += sqlalchemy_db_test_html(environ,app)
   response += env_var_list_html(environ)
 
   return response
@@ -118,25 +100,13 @@ def hello():
 
 @app.route('/stress', methods=['GET'])
 def index():
-   response = ""
-
-   response += "Welcome to Stress! <br/> \n"
-   response += "<br/> \n"
-
-   response += "ENVIRONMENT <br/> \n"
-   response += "----------- <br/> \n"
-   for k, v in sorted(environ.items()):
-      response += ( str(k) + ': ' + str(v) + " <br/> \n" )
-   response += "<br/> \n"
-
-   response += "URI ARGS <br/> \n"
-   response += "-------- <br/> \n"
-   for key, value in request.args.items():
-      response += '{0}={1}<br/>'.format(key, value)
-
-   return response
+  response = ""
+  response += "Welcome to Stress! <br/> \n"
+  response += "<br/> \n"
+  response += uri_request_args_html(request)
+  response += env_var_list_html(environ)
+  return response
 
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80)
-page_response
