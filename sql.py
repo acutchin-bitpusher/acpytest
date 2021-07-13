@@ -3,14 +3,10 @@ import sys
 import json
 from flask import Flask, request
 
-##  LOCAL LIBRARIES
-from env_vars import *
-from db_config import *
-
 ##  FOR SQL DB TESTING
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import text
-import pymysql
+#from flask_sqlalchemy import SQLAlchemy
+#from sqlalchemy.sql import text
+#import pymysql
 
 ##  FOR STRESS
 #import argparse
@@ -20,16 +16,24 @@ import pymysql
 #import sys
 #import time
 
+
 app = Flask(__name__)
 
 @app.route("/")
 def hello():
 
   #response.content_type = "text/plain"
+
   response = ""
+
   response += "Hello from acpytest! <br/> \n"
   response += "<br/> \n"
-  response += db_config_html(environ)
+
+  response += "ENVIRONMENT <br/> \n"
+  response += "----------- <br/> \n"
+  for k, v in sorted(environ.items()):
+    response += ( str(k) + ': ' + str(v) + " <br/> \n" )
+  response += "<br/> \n"
 
 #  DB_CONFIG = {}
 #  DB_CONFIG["ENGINE"]   = environ.get("DB_ENGINE", "")
@@ -38,16 +42,16 @@ def hello():
 #  DB_CONFIG["NAME"]     = environ.get("DB_NAME", "")
 #  DB_CONFIG["USERNAME"] = environ.get("DB_USERNAME", "")[1:-1]
 #  DB_CONFIG["PASSWORD"] = environ.get("DB_PASSWORD", "")[1:-1]
-#
+
 #  if DB_CONFIG["ENGINE"] == "mysql":
 #    DB_CONFIG["DIALECT_DRIVER"] = "mysql+pymysql"
 #  elif DB_CONFIG["ENGINE"] == "postgresql":
 #    DB_CONFIG["DIALECT_DRIVER"] = "???"
 #  else:
 #    DB_CONFIG["DIALECT_DRIVER"] = "???"
-#
+
 #  DB_CONFIG["URI"] = DB_CONFIG["DIALECT_DRIVER"] + '://' + DB_CONFIG["USERNAME"] + ':' + DB_CONFIG["PASSWORD"] + '@' + DB_CONFIG["HOSTNAME"] + ':' + DB_CONFIG["PORT"] + '/' + DB_CONFIG["NAME"]
-#
+
 #  response += "DB_CONFIG <br/> \n"
 #  response += "--------- <br/> \n"
 #  for DB_VAR in DB_CONFIG.keys():
@@ -85,8 +89,6 @@ def hello():
 #  except Exception as e:
 #    tables = "FAILED" + str(e) + ' <br/> \n'
 #  response += "<br/> \n"
-
-  response += env_var_list_html(environ)
 
   return response
 
