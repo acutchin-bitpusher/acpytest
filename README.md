@@ -12,35 +12,40 @@ Python/Flask app for testing infrastructure
 
 1. install prerequisites
 
-    brew install python3 pyenv pyenv-virtualenv virtualenv
+        brew install python3 pyenv pyenv-virtualenv virtualenv
 
 1. create virtualenv
 
-    virtualenv venv
+        virtualenv venv
 
 1. activate virutalenv
 
-    . venv/bin/activate
+        . venv/bin/activate
 
 1. verify virtual python version
 
-    python --version
+        python --version
 
 1. install pip packages to virutalenv
 
-    pip install -r ./requirements.txt
+        pip install -r ./requirements.txt
 
 1. run app
 
-    python3 ./main.py
+        python3 ./main.py
 
 
 ##  DOCKER
 
 * build Docker image and push to DockerHub
 
-    docker build -f Dockerfile -t acutchinbitpusher/actest . && docker push acutchinbitpusher/actest
+        docker build -f Dockerfile -t acutchinbitpusher/actest . && docker push acutchinbitpusher/actest
 
 * build Docker image and push to DockerHub with version tag
 
-    TAG=`cat version.py | cut -f2 -d= | tr -d \'`; docker build -f Dockerfile -t acutchinbitpusher/actest:$TAG . && docker push acutchinbitpusher/actest:$TAG
+        TAG=`cat version.py | cut -f2 -d= | tr -d \'`; docker build -f Dockerfile -t acutchinbitpusher/actest:$TAG . && docker push acutchinbitpusher/actest:$TAG
+
+
+* NOTE: Building on M1 Mac requires special 'buildx' invocation (https://blog.jaimyn.dev/how-to-build-multi-architecture-docker-images-on-an-m1-mac/)
+
+        TAG=`cat version.py | cut -f2 -d= | tr -d \'`; docker buildx build --platform linux/amd64 --push -t acutchinbitpusher/actest:$TAG .
