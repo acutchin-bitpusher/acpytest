@@ -44,7 +44,7 @@ Python/Flask app for testing infrastructure
   * NOTE: Building on M1 Mac requires special 'buildx' invocation
     * (https://blog.jaimyn.dev/how-to-build-multi-architecture-docker-images-on-an-m1-mac/)
 
-        docker buildx build --platform linux/amd64 -t acutchinbitpusher/actest:$TAG .
+        TAG=`cat version.py | cut -f2 -d= | tr -d \'`; docker buildx build --platform linux/amd64 -t acutchinbitpusher/actest:$TAG .
 
 * push to DockerHub
 

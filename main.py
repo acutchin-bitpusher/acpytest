@@ -6,12 +6,9 @@ from flask import Flask, request
 ##  LOCAL LIBRARIES
 from env_vars import *
 from db_config import *
-from uri_request import *
 from sql import *
 from version import *
 from stress import *
-
-#import psutil
 
 app = Flask(__name__)
 
@@ -30,21 +27,13 @@ def hello():
 
 @app.route('/stress', methods=['GET'])
 def index():
-  #response  = "<br/> \n"
   response  = ""
   response += "acpystress, version: " + version + " <br/> \n"
-  #response += "<br/> \n"
   response += "URI request args: "
-  #response += uri_request_args_html(request)
   for key, value in request.args.items():
     response += '{0}={1}, '.format(key, value)
-  #response += "Stressing out... <br/> \n"
   response += "<br/> \n"
-#  stress(
-#    request.args.get('cores_to_stress', ''),
-#    request.args.get('memory_to_allocate', '')
-#  )
-#  response += stress()
+  #response += stress() ##  FIXED ARGS
   response += stress(
     cpu=request.args.get('cpu'),
     #vm=request.args.get('vm')
