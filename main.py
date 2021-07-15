@@ -2,7 +2,6 @@ from os import environ
 import sys
 import json
 from flask import Flask, request
-from flask_socketio import SocketIO
 
 ##  LOCAL LIBRARIES
 from env_vars import *
@@ -44,7 +43,5 @@ def index():
   return response
 
 if __name__ == "__main__":
-    #app.run(host='0.0.0.0', port=80)
-    ##  PER: https://stackoverflow.com/questions/53522052/flask-app-valueerror-signal-only-works-in-main-thread
-    socketio.run(app)
+  app.run(host='0.0.0.0', port=80)
 

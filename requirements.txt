@@ -2,4 +2,3 @@ Flask
 flask-sqlalchemy
 pymysql
 psutil
-flask_socketio
