@@ -28,17 +28,27 @@ def hello():
   response += env_var_list_html(environ)
   return response
 
-@app.route('/stress/', methods=['GET'])
+@app.route('/stress', methods=['GET'])
 def index():
-  response = ""
-  response += "Welcome to Stress! <br/> \n"
-  response += "version: " + version + " <br/> \n"
+  #response  = "<br/> \n"
+  response  = ""
+  response += "acpystress, version: " + version + " <br/> \n"
+  #response += "<br/> \n"
+  response += "URI request args: "
+  #response += uri_request_args_html(request)
+  for key, value in request.args.items():
+    response += '{0}={1}, '.format(key, value)
+  #response += "Stressing out... <br/> \n"
   response += "<br/> \n"
-  response += uri_request_args_html(request)
-  response += "Stressing out..."
-  stress(
-    request.args.get('cores_to_stress', ''),
-    request.args.get('memory_to_allocate', '')
+#  stress(
+#    request.args.get('cores_to_stress', ''),
+#    request.args.get('memory_to_allocate', '')
+#  )
+#  response += stress()
+  response += stress(
+    cpu=request.args.get('cpu'),
+    #vm=request.args.get('vm')
+    timeout=request.args.get('timeout')
   )
   return response
 

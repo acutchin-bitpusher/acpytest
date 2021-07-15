@@ -1,38 +1,38 @@
-##  FROM: https://github.com/mattixtech/stress/blob/master/stress/stress.py
+##  FIXED ARGS
+#def stress():
+#  import subprocess
+#  response  = ""
+#  response += "<br/> \n"
+#  response += str(subprocess.Popen('stress -c 10 -t 1', shell=True, stdout=subprocess.PIPE).stdout.read().decode("utf-8"))
+#  response += "<br/> \n"
+#  return response
 
-def _spin():
-  while True:
-    pass
+def stress(**kwargs):
+  import subprocess
+  cmd = '/usr/bin/stress '
+  for key, value in kwargs.items():
+    #print ("%s == %s" %(key, value))
+    cmd += ( "--%s %s " %( key, value ) )
+  response  = ""
+#  response += "<br/> \n"
+  response += "cmd: " + cmd + " <br/> \n"
+#  response += "<br/> \n"
+#  response += str(subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).stdout.read().decode("utf-8"))
 
-def stress_processes(num_processes):
-  import multiprocessing
-  for _ in range(num_processes):
-    multiprocessing.Process(target=_spin).start()
-
-def stress_ram(ram_to_allocate_mb):
-  import time
   try:
-    _ = [0] * int(((ram_to_allocate_mb / 8) * (1024 ** 2)))
-    while True:
-      time.sleep(1)
-  except MemoryError:
-    stress_ram(int(ram_to_allocate_mb * 0.9))
+    cmd_output = subprocess.check_output(
+      cmd,
+      stderr=subprocess.STDOUT,
+      shell=True,
+      #timeout=3,
+      universal_newlines=True
+    )
+  except subprocess.CalledProcessError as exc:
+    #print("Status : FAIL", exc.returncode, exc.output)
+    response += "ERROR: " + str(exc.returncode) + " <br/> \n" + str(exc.output) + " <br/> \n"
+  else:
+    #print("Output: \n{}\n".format(output))
+    response += str(cmd_output) + " <br/> \n"
 
-def stress(cores_to_stress,memory_to_allocate):
-  import multiprocessing
-  import psutil
-  import signal
-  import sys
-  signal.signal(signal.SIGINT, lambda x, y: sys.exit(1))
-  if not cores_to_stress and not memory_to_allocate:
-    cores_to_stress = multiprocessing.cpu_count()
-    memory_to_allocate = psutil.virtual_memory().total
-  if cores_to_stress:
-    multiprocessing.Process(
-      target=stress_processes,
-      args=(
-        cores_to_stress,
-      )
-    ).start()
-  if memory_to_allocate:
-    stress_ram(memory_to_allocate)
+  response += "<br/> \n"
+  return response
