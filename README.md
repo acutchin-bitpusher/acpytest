@@ -39,12 +39,13 @@ Python/Flask app for testing infrastructure
 
 * build Docker image with version tag in `version.py`
 
-        TAG=`cat version.py | cut -f2 -d= | tr -d \'`; docker build -f Dockerfile -t acutchinbitpusher/actest:$TAG .
+  * on M1 Mac ([requires special 'buildx' invocation](https://blog.jaimyn.dev/how-to-build-multi-architecture-docker-images-on-an-m1-mac/))
 
-  * NOTE: Building on M1 Mac requires special 'buildx' invocation
-    * (https://blog.jaimyn.dev/how-to-build-multi-architecture-docker-images-on-an-m1-mac/)
+            TAG=`cat version.py | cut -f2 -d= | tr -d \'`; docker buildx build --platform linux/amd64 -t acutchinbitpusher/actest:$TAG .
 
-        TAG=`cat version.py | cut -f2 -d= | tr -d \'`; docker buildx build --platform linux/amd64 -t acutchinbitpusher/actest:$TAG .
+  * on Linux
+
+            TAG=`cat version.py | cut -f2 -d= | tr -d \'`; docker build -f Dockerfile -t acutchinbitpusher/actest:$TAG .
 
 * push to DockerHub
 
