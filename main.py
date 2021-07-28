@@ -17,7 +17,7 @@ def hello():
 
   #response.content_type = "text/plain"
   response = ""
-  response += "Hello again again from acpytest! <br/> \n"
+  response += "Hello yeah from acpytest! <br/> \n"
   response += "version: " + version + " <br/> \n"
   response += "<br/> \n"
   response += db_config_html(environ)
