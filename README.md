@@ -52,3 +52,7 @@ Python/Flask app for testing infrastructure
         TAG=`cat version.py | cut -f2 -d= | tr -d \'`; docker push acutchinbitpusher/actest:$TAG
 
 
+##  Build for EC2 and push to DockerHub
+
+        DH_ACCT='acutchinbitpusher'; REPO='acpytest'; TAG=`cat version.py | cut -f2 -d= | tr -d \'`; docker buildx build --platform linux/amd64 -t $DH_ACCT/$REPO:$TAG . && docker push $DH_ACCT/$REPO:$TAG
+

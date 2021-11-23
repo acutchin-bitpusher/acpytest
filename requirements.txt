@@ -1,4 +1,5 @@
 Flask
 flask-sqlalchemy
+requests
 pymysql
 psutil
