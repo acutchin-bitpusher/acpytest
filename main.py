@@ -21,8 +21,8 @@ def hello():
   response += "Hello from acpytest! <br/> \n"
   response += "version: " + version + " <br/> \n"
   response += "<br/> \n"
-  response += db_config_html(environ)
-  response += sqlalchemy_db_test_html(environ,app)
+  #response += db_config_html(environ)
+  #response += sqlalchemy_db_test_html(environ,app)
   response += env_var_list_html(environ)
   return response
 
